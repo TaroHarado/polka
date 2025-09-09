@@ -1,0 +1,1 @@
+export const UNIV2_ROUTER_ABI=['function getAmountsOut(uint amountIn, address[] memory path) view returns (uint[] memory amounts)','function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline) payable returns (uint[] memory amounts)','function WETH() view returns (address)'];

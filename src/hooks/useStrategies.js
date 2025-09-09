@@ -1,0 +1,1 @@
+'use client';import*as React from'react';export function useStrategies(){const[s,setS]=React.useState({strategies:[]});return{strategies:s.strategies,add:()=>{},start:()=>{},stop:()=>{},remove:()=>{}}}

@@ -1,0 +1,44 @@
+{
+  "name": "Trader",
+  "positionsValue": 14585.07,
+  "profitLoss": -18139.28,
+  "volumeTraded": 1616079.3,
+  "marketsTraded": 220,
+  "analytics": {
+    "pnl7dPct": "+1193.36%",
+    "pnl7dUsd": "+2.4M",
+    "recent": [
+      {
+        "token": "SOL",
+        "ago": "23m",
+        "real": "+4.1M"
+      },
+      {
+        "token": "SOL",
+        "ago": "26m",
+        "real": "+7.2M"
+      },
+      {
+        "token": "SOL",
+        "ago": "43m",
+        "real": "+0.16M"
+      }
+    ]
+  },
+  "positions": [
+    {
+      "market": "Russia x Ukraine ceasefire in 2025?",
+      "avg": "24\u00a2",
+      "current": "34\u00a2",
+      "value": 7480.0,
+      "pnl": "+41.6%"
+    },
+    {
+      "market": "Will ZM win NYC mayoral election?",
+      "avg": "22\u00a2",
+      "current": "19\u00a2",
+      "value": 760.0,
+      "pnl": "-14.95%"
+    }
+  ]
+}

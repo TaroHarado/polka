@@ -1,0 +1,1 @@
+'use client';import { useParams } from 'next/navigation';import ProfilePage from '@/components/ProfilePage';export default function Trader(){ const { address } = useParams(); return <ProfilePage addrParam={address} />; }
