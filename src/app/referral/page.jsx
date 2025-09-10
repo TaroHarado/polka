@@ -13,7 +13,7 @@ export default function Referral(){
   const [openDep,setOpenDep]=React.useState(false);
   const toast = useToast();
   const code = address ? address.toLowerCase() : 'your-code';
-  const link = typeof window!=='undefined' ? `${window.location.origin}/?ref=${code}` : `https://Trepoly.xyz/?ref=${code}`;
+  const link = typeof window!=='undefined' ? `${window.location.origin}/?ref=${code}` : `https://Polyscalp.xyz/?ref=${code}`;
   const toggleTheme=()=>{ const d=document.documentElement; d.dataset.theme=d.dataset.theme==='dark'?'light':'dark'; };
 
   return (<div>

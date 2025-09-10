@@ -16,13 +16,13 @@ export default function HeaderNav({
       <div className="sticky-header">
         <div className="max-w-6xl mx-auto px-3 py-2 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <a className="font-semibold" href="/dashboard">Trepoly</a>
+            <a className="font-semibold" href="/dashboard">Polyscalp</a>
             <nav className="hidden md:flex items-center gap-3 text-sm text-muted">
               <a className="hover:underline" href="/dashboard">Dashboard</a>
               <a className="hover:underline" href="/rank">Top Traders</a>
               <a className="hover:underline" href="/referral">Referral</a>
               <a className="hover:underline" href="/me">Profile</a>
-              <a className="hover:underline" href="https://x.com/Trepoly_sol">Twitter</a>
+              <a className="hover:underline" href="https://x.com/Polyscalp_sol">Twitter</a>
                             <a className="hover:underline" href="https://pump.fun">Pump.fun</a>
 
             </nav>

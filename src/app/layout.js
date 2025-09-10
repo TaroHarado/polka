@@ -1,4 +1,4 @@
-export const metadata = { title: "Trepoly", description: "Copy-trade for Polymarket" };
+export const metadata = { title: "Polyscalp", description: "Copy-trade for Polymarket" };
 import './globals.css';
 import { ToastsProvider } from '@/hooks/useToasts';
 import { WalletProvider } from '@/hooks/WalletContext';
