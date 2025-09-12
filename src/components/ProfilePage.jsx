@@ -6,34 +6,65 @@ import CopyTradeDrawer from '@/components/CopyTradeDrawer';
 import { useWallet } from '@/hooks/WalletContext';
 import { useToast } from '@/hooks/useToasts';
 
+/* ---- tiny area spark for vibe ---- */
 function AreaSpark() {
   return (
     <svg width="100%" height="120" viewBox="0 0 100 30">
+      <defs>
+        <linearGradient id="area" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="rgba(34,197,94,.95)" />
+          <stop offset="1" stopColor="rgba(56,189,248,.95)" />
+        </linearGradient>
+      </defs>
       <polyline
-        fill="rgba(34,197,94,.25)"
+        fill="rgba(34,197,94,.22)"
         stroke="none"
         points="0,30 0,24 10,25 20,22 30,20 40,19 50,17 60,13 70,12 80,10 90,8 100,7 100,30"
       />
       <polyline
         fill="none"
-        stroke="rgba(34,197,94,.9)"
-        strokeWidth="1.5"
+        stroke="url(#area)"
+        strokeWidth="1.6"
         points="0,24 10,25 20,22 30,20 40,19 50,17 60,13 70,12 80,10 90,8 100,7"
       />
     </svg>
   );
 }
 
-function Stat({ label, value }) {
-  return (
-    <div className="card">
-      <div className="small mb-1">{label}</div>
-      <div className="text-xl font-semibold">
-        ${Number(value || 0).toLocaleString()}
-      </div>
+const StatCard = ({ label, value, suffix = '' }) => (
+  <div className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-lg">
+    <div className="text-xs text-white/60">{label}</div>
+    <div className="mt-1 text-xl font-semibold tracking-tight">
+      {typeof value === 'number' ? value.toLocaleString() : value}
+      {suffix}
     </div>
+  </div>
+);
+
+const ActionButton = ({ children, onClick, href, target = '_self', variant = 'primary' }) => {
+  const base =
+    'inline-flex items-center justify-center rounded-xl px-3.5 py-2 text-sm font-semibold transition';
+  const styles = {
+    primary:
+      'bg-gradient-to-r from-indigo-500 to-sky-500 text-white hover:opacity-95 active:opacity-90',
+    ghost:
+      'border border-white/15 bg-white/5 text-white/85 hover:bg-white/10 active:bg-white/15',
+  };
+  if (href) {
+    return (
+      <a href={href} target={target} rel="noopener" className={`${base} ${styles[variant]}`}>
+        {children}
+      </a>
+    );
+  }
+  return (
+    <button type="button" onClick={onClick} className={`${base} ${styles[variant]}`}>
+      {children}
+    </button>
   );
-}
+};
+
+const shortAddr = (a) => (a ? `${a.slice(0, 6)}.....${a.slice(-5)}` : '—');
 
 export default function ProfilePage({ self = false, addrParam = '' }) {
   const wallet = useWallet();
@@ -61,8 +92,10 @@ export default function ProfilePage({ self = false, addrParam = '' }) {
         const r = await fetch('/demo-profile.json');
         const j = await r.json();
         if (!dead) {
-          const short = addr.slice(0, 6) + '…' + addr.slice(-4);
-          setData({ ...j, address: short });
+          setData({
+            ...j,
+            addressShort: shortAddr(addr),
+          });
         }
       } catch (e) {
         console.error(e);
@@ -73,20 +106,30 @@ export default function ProfilePage({ self = false, addrParam = '' }) {
     };
   }, [addr]);
 
+  const shell = (
+    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-indigo-950 to-slate-900 text-slate-100">
+      <HeaderNav
+        address={address}
+        usdcNative={usdcNative}
+        usdcBridged={usdcBridged}
+        polBal={polBal}
+        onCreateWallet={createWallet}
+        onDeposit={() => setOpenDep(true)}
+        onDisconnect={disconnect}
+        onToggleTheme={toggleTheme}
+      />
+    </div>
+  );
+
   if (!data) {
     return (
-      <div>
-        <HeaderNav
-          address={address}
-          usdcNative={usdcNative}
-          usdcBridged={usdcBridged}
-          polBal={polBal}
-          onCreateWallet={createWallet}
-          onDeposit={() => setOpenDep(true)}
-          onDisconnect={disconnect}
-          onToggleTheme={toggleTheme}
-        />
-        <div className="max-w-6xl mx-auto p-3 small">Loading…</div>
+      <>
+        {shell}
+        <main className="mx-auto max-w-6xl px-4 py-6 md:px-6 md:py-8">
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-lg text-sm text-white/70">
+            Loading…
+          </div>
+        </main>
         <DepositDrawer open={openDep} onClose={() => setOpenDep(false)} wallet={wallet} />
         <CopyTradeDrawer
           open={openCopy}
@@ -99,12 +142,14 @@ export default function ProfilePage({ self = false, addrParam = '' }) {
             window.location.href = '/dashboard?autostart=1';
           }}
         />
-      </div>
+      </>
     );
   }
 
+  const pmUrl = `https://polymarket.com/${addr}`;
+
   return (
-    <div>
+    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-indigo-950 to-slate-900 text-slate-100">
       <HeaderNav
         address={address}
         usdcNative={usdcNative}
@@ -116,91 +161,109 @@ export default function ProfilePage({ self = false, addrParam = '' }) {
         onToggleTheme={toggleTheme}
       />
 
-      <div className="max-w-6xl mx-auto p-3">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <div className="w-14 h-14 rounded-full bg-white/10 grid place-items-center text-2xl">🎯</div>
-            <div>
-              <div className="text-2xl font-semibold">{self ? 'My Profile' : (data.name || 'Trader')}</div>
-              <div className="small mono">{data.address}</div>
+      <main className="mx-auto max-w-6xl px-4 py-6 md:px-6 md:py-8">
+        {/* HERO */}
+        <section className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-5 md:p-7 shadow-xl ring-1 ring-black/5">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(900px_360px_at_-10%_-20%,rgba(99,102,241,.25),transparent),radial-gradient(720px_280px_at_110%_-10%,rgba(56,189,248,.25),transparent)]" />
+          <div className="relative z-10 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="grid h-14 w-14 place-items-center rounded-full bg-white/10 text-2xl">
+                🎯
+              </div>
+              <div>
+                <h1 className="text-xl font-black tracking-tight md:text-2xl">
+                  {self ? 'My Profile' : (data.name || 'Trader')}
+                </h1>
+                <div className="font-mono text-sm text-white/70">{data.addressShort}</div>
+              </div>
             </div>
-          </div>
-          <div className="flex gap-2">
-            {!self && (
-              <button
-                className="btn btn-primary"
+            <div className="flex flex-wrap gap-2">
+              {!self && (
+                <ActionButton
+                  onClick={() => {
+                    setPrefill(addr);
+                    setOpenCopy(true);
+                  }}
+                >
+                  Copy trade
+                </ActionButton>
+              )}
+              <ActionButton
+                variant="ghost"
                 onClick={() => {
-                  setPrefill(addr);
-                  setOpenCopy(true);
+                  navigator.clipboard.writeText(addr);
+                  toast({ msg: 'Address copied' });
                 }}
               >
-                Copy trade
-              </button>
-            )}
-            <button
-              className="btn btn-ghost"
-              onClick={() => {
-                navigator.clipboard.writeText(addr);
-                toast({ msg: 'Address copied' });
-              }}
-            >
-              Share
-            </button>
+                Share
+              </ActionButton>
+              <ActionButton href={pmUrl} target="_blank" variant="ghost">
+                Open on Polymarket ↗
+              </ActionButton>
+            </div>
           </div>
-        </div>
+        </section>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-          <Stat label="Positions value" value={data.positionsValue} />
-          <Stat label="Profit/loss" value={Math.abs(data.profitLoss)} />
-          <Stat label="Volume traded" value={data.volumeTraded} />
-          <Stat label="Markets traded" value={data.marketsTraded} />
-        </div>
+        {/* STATS */}
+        <section className="mt-6 grid grid-cols-1 gap-4 md:mt-8 md:grid-cols-4">
+          <StatCard label="Positions value" value={`$${Number(data.positionsValue || 0).toLocaleString()}`} />
+          <StatCard
+            label="Profit / loss"
+            value={`${data.profitLoss >= 0 ? '+' : '−'}$${Math.abs(Number(data.profitLoss || 0)).toLocaleString()}`}
+          />
+          <StatCard label="Volume traded" value={`$${Number(data.volumeTraded || 0).toLocaleString()}`} />
+          <StatCard label="Markets traded" value={Number(data.marketsTraded || 0)} />
+        </section>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mt-4">
-          <div className="card lg:col-span-2">
-            <div className="flex items-center justify-between mb-2">
+        {/* ANALYTICS */}
+        <section className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
+          <article className="lg:col-span-2 rounded-2xl border border-white/10 bg-white/5 p-5 shadow-lg">
+            <div className="mb-2 flex items-center justify-between">
               <div className="font-semibold">7D Realized PnL</div>
-              <div className="small">
-                {data.analytics?.pnl7dPct || '+—'} / {data.analytics?.pnl7dUsd || '—'}
+              <div className="text-xs text-white/70">
+                {(data.analytics?.pnl7dPct || '+—')} / {(data.analytics?.pnl7dUsd || '—')}
               </div>
             </div>
             <AreaSpark />
-            <div className="small mt-1 text-white/60">
+            <div className="mt-1 text-xs text-white/60">
               {(data.analytics?.recent || []).length} data points
             </div>
-          </div>
+          </article>
 
-          <div className="card">
-            <div className="font-semibold mb-2">Recent PnL</div>
+          <article className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-lg">
+            <div className="mb-2 font-semibold">Recent PnL</div>
             <div className="space-y-2">
               {(data.analytics?.recent || []).map((r, i) => (
                 <div
                   key={i}
-                  className="flex items-center justify-between border rounded-xl p-2"
-                  style={{ borderColor: 'var(--border)' }}
+                  className="flex items-center justify-between rounded-xl border border-white/10 bg-black/10 p-2"
                 >
                   <div className="text-sm">
-                    {r.token} <span className="text-white/50 small">• {r.ago}</span>
+                    {r.token}{' '}
+                    <span className="text-white/50 text-xs">• {r.ago}</span>
                   </div>
-                  <div className="mono text-xs text-[var(--success)]">{r.real}</div>
+                  <div className={`font-mono text-xs ${String(r.real).startsWith('-') ? 'text-rose-300' : 'text-emerald-300'}`}>
+                    {r.real}
+                  </div>
                 </div>
               ))}
             </div>
-          </div>
-        </div>
+          </article>
+        </section>
 
-        <div className="card mt-4">
+        {/* POSITIONS */}
+        <section className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-5 shadow-lg">
           <div className="mb-2 font-semibold">Positions</div>
           <div className="overflow-auto">
-            <table className="w-full text-sm table">
-              <thead className="text-white/60">
-                <tr className="text-left">
+            <table className="w-full text-sm">
+              <thead className="text-left text-white/60">
+                <tr>
                   <th className="py-2 pr-2">Market</th>
                   <th className="py-2 pr-2">Avg</th>
                   <th className="py-2 pr-2">Current</th>
                   <th className="py-2 pr-2">Value</th>
                   <th className="py-2 pr-2">PnL</th>
-                  <th />
+                  <th className="py-2 pr-2" />
                 </tr>
               </thead>
               <tbody>
@@ -209,37 +272,36 @@ export default function ProfilePage({ self = false, addrParam = '' }) {
                     <td className="py-2 pr-2">{p.market}</td>
                     <td className="py-2 pr-2">{p.avg}</td>
                     <td className="py-2 pr-2">{p.current}</td>
-                    <td className="py-2 pr-2">${p.value.toLocaleString()}</td>
-                    <td
-                      className={`py-2 pr-2 ${
-                        String(p.pnl).startsWith('-') ? 'text-[var(--error)]' : 'text-[var(--success)]'
-                      }`}
-                    >
+                    <td className="py-2 pr-2">${Number(p.value || 0).toLocaleString()}</td>
+                    <td className={`py-2 pr-2 ${String(p.pnl).startsWith('-') ? 'text-rose-300' : 'text-emerald-300'}`}>
                       {p.pnl}
                     </td>
                     <td className="py-2 pr-2 text-right">
-                      <button className="btn btn-ghost">↗</button>
+                      <ActionButton href={pmUrl} target="_blank" variant="ghost">
+                        ↗
+                      </ActionButton>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-        </div>
+        </section>
+      </main>
 
-        <DepositDrawer open={openDep} onClose={() => setOpenDep(false)} wallet={wallet} />
-        <CopyTradeDrawer
-          open={openCopy}
-          onClose={() => setOpenCopy(false)}
-          prefillAddress={prefill}
-          onConfirm={(payload) => {
-            try {
-              localStorage.setItem('pendingCopyConfig', JSON.stringify(payload));
-            } catch {}
-            window.location.href = '/dashboard?autostart=1';
-          }}
-        />
-      </div>
+      {/* Drawers */}
+      <DepositDrawer open={openDep} onClose={() => setOpenDep(false)} wallet={wallet} />
+      <CopyTradeDrawer
+        open={openCopy}
+        onClose={() => setOpenCopy(false)}
+        prefillAddress={prefill}
+        onConfirm={(payload) => {
+          try {
+            localStorage.setItem('pendingCopyConfig', JSON.stringify(payload));
+          } catch {}
+          window.location.href = '/dashboard?autostart=1';
+        }}
+      />
     </div>
   );
 }

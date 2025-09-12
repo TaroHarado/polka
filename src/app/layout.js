@@ -1,4 +1,14 @@
-export const metadata = { title: "Polyscalp", description: "Copy-trade for Polymarket" };
+export const metadata = {
+  title: 'PolyMoly | Copytrading Terminal', 
+  icons: {
+    icon: [
+      { url: '/icon.png' }, 
+
+    ],
+
+  },
+};
+
 import './globals.css';
 import { ToastsProvider } from '@/hooks/useToasts';
 import { WalletProvider } from '@/hooks/WalletContext';
