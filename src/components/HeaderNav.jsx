@@ -70,14 +70,14 @@ export default function HeaderNav({
                 href="/dashboard"
                 className="select-none rounded-lg bg-white/5 px-2.5 py-1.5 text-sm font-black tracking-tight text-white hover:bg-white/10"
               >
-                PolyMoly
+                Predic
               </a>
               <nav className="hidden min-w-0 shrink md:flex items-center gap-1">
                 <NavLink href="/dashboard">Dashboard</NavLink>
                 <NavLink href="/rank">Top Traders</NavLink>
                 <NavLink href="/referral">Referral</NavLink>
                 <NavLink href="/me">Profile</NavLink>
-                <NavLink href="https://x.com/PolyMoly_sol">Twitter</NavLink>
+                <NavLink href="https://x.com/Predic_sol">Twitter</NavLink>
                 <NavLink href="https://pump.fun">Pump.fun</NavLink>
               </nav>
             </div>

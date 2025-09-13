@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'PolyMoly | Copytrading Terminal', 
+  title: 'Predic', 
   icons: {
     icon: [
       { url: '/icon.png' }, 
