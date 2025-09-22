@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Predic', 
+  title: 'bnPoly', 
   icons: {
     icon: [
       { url: '/icon.png' }, 
