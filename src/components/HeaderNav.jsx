@@ -77,7 +77,7 @@ export default function HeaderNav({
                 <NavLink href="/rank">Top Traders</NavLink>
                 <NavLink href="/referral">Referral</NavLink>
                 <NavLink href="/me">Profile</NavLink>
-                <NavLink href="https://x.com/Polka_sol">Twitter</NavLink>
+                <NavLink href="https://x.com/Polka_icu">Twitter</NavLink>
                 <NavLink href="https://pump.fun/">Pump.fun</NavLink>
               </nav>
             </div>
