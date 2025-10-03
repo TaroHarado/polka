@@ -109,7 +109,7 @@ function _Dashboard(){
   return (
     <div className="p-4 max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-4">
-        <div className="text-xl font-semibold">PredyX</div>
+        <div className="text-xl font-semibold">Polka</div>
         <div className="flex items-center gap-2">
           {wallet
             ? (<><div className="mono px-2 py-1 rounded border" style={{borderColor:'var(--border)'}}>{wallet.address.slice(0,6)}…{wallet.address.slice(-4)}</div>
